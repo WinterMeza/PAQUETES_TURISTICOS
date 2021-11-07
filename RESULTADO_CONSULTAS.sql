@@ -1,5 +1,4 @@
 --CONSULTAS
-
 --Histórico de paquetes vendido por cada agente (año, nombre del agente, el tipo y la cantidad de paquetes vendidos).
 SELECT 
 FECHA_PAGO AS AñO,NOMBRE_A AS NOMBRE_AGENTE,TIPO_PT,CANTIDAD_PT FROM CONTRATACION
