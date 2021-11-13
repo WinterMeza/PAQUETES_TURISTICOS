@@ -1,40 +1,4 @@
 /*==============================================================*/
-/* DBMS name:      PostgreSQL 8                                 */
-/* Created on:     5/11/2021 0:46:59                            */
-/*==============================================================*/
-
-
-drop table AGENTE;
-
-drop table CIUDAD;
-
-drop table CLIENTE;
-
-drop table CONTRATACION;
-
-drop table CONVENIOS;
-
-drop table EMPRESA_PAQUETES;
-
-drop table EPOCAS_VENTA;
-
-drop table PAGO;
-
-drop table PAIS;
-
-drop table PAQUETE_TURISTICO;
-
-drop table PROVINCIA;
-
-drop table SASTIFACCION;
-
-drop table SERVICIOS;
-
-drop table SERVICIOS_ADICIONALES;
-
-drop table TIPO_PAGO;
-
-/*==============================================================*/
 /* Table: AGENTE                                                */
 /*==============================================================*/
 create table AGENTE (
@@ -44,8 +8,22 @@ create table AGENTE (
    CEDULA_A             VARCHAR(10)          not null,
    NUME_TELE_G          VARCHAR(10)          not null,
    CORREO_A             VARCHAR(100)         not null,
-   FECHA_INGRESO        DATE                 not null,
+   FECHA_INGRESA        DATE                 not null,
    constraint PK_AGENTE primary key (ID_AGENTE)
+);
+
+/*==============================================================*/
+/* Index: AGENTE_PK                                             */
+/*==============================================================*/
+create unique index AGENTE_PK on AGENTE (
+ID_AGENTE
+);
+
+/*==============================================================*/
+/* Index: CONTRATAN_FK                                          */
+/*==============================================================*/
+create  index CONTRATAN_FK on AGENTE (
+ID_EMPRESA_PA
 );
 
 /*==============================================================*/
@@ -53,9 +31,23 @@ create table AGENTE (
 /*==============================================================*/
 create table CIUDAD (
    ID_CIUDAD            INT4                 not null,
-   ID_PROVINCIA         INT4                 null,
+   ID_PROVINCIA         INT4                 not null,
    NOMBRE_CIUDAD        VARCHAR(50)          not null,
    constraint PK_CIUDAD primary key (ID_CIUDAD)
+);
+
+/*==============================================================*/
+/* Index: CIUDAD_PK                                             */
+/*==============================================================*/
+create unique index CIUDAD_PK on CIUDAD (
+ID_CIUDAD
+);
+
+/*==============================================================*/
+/* Index: EXISTEN_FK                                            */
+/*==============================================================*/
+create  index EXISTEN_FK on CIUDAD (
+ID_PROVINCIA
 );
 
 /*==============================================================*/
@@ -67,8 +59,15 @@ create table CLIENTE (
    CEDULA_C             VARCHAR(10)          not null,
    NUME_TELE_C          VARCHAR(10)          not null,
    CORREO_C             VARCHAR(100)         not null,
-   TIPO_USUARIO         VARCHAR(20)          null,
+   TIPO_USUARIO         VARCHAR(20)          not null,
    constraint PK_CLIENTE primary key (ID_CLIENTE)
+);
+
+/*==============================================================*/
+/* Index: CLIENTE_PK                                            */
+/*==============================================================*/
+create unique index CLIENTE_PK on CLIENTE (
+ID_CLIENTE
 );
 
 /*==============================================================*/
@@ -76,9 +75,9 @@ create table CLIENTE (
 /*==============================================================*/
 create table CONTRATACION (
    ID_CONTRATACION      INT4                 not null,
+   ID_AGENTE            INT4                 not null,
    ID_SA                INT4                 not null,
    ID_CLIENTE           INT4                 not null,
-   ID_AGENTE            INT4                 not null,
    FECHA_PAGO           DATE                 not null,
    FECHA_INICIO_VIAJE   DATE                 not null,
    FECHA_FIN_VIAJE      DATE                 not null,
@@ -86,17 +85,58 @@ create table CONTRATACION (
 );
 
 /*==============================================================*/
+/* Index: CONTRATACION_PK                                       */
+/*==============================================================*/
+create unique index CONTRATACION_PK on CONTRATACION (
+ID_CONTRATACION
+);
+
+/*==============================================================*/
+/* Index: REGISTRA_FK                                           */
+/*==============================================================*/
+create  index REGISTRA_FK on CONTRATACION (
+ID_AGENTE
+);
+
+/*==============================================================*/
+/* Index: BRINDA_FK                                             */
+/*==============================================================*/
+create  index BRINDA_FK on CONTRATACION (
+ID_SA
+);
+
+/*==============================================================*/
+/* Index: REALIZA_FK                                            */
+/*==============================================================*/
+create  index REALIZA_FK on CONTRATACION (
+ID_CLIENTE
+);
+
+/*==============================================================*/
 /* Table: CONVENIOS                                             */
 /*==============================================================*/
 create table CONVENIOS (
    ID_CONVENIOS         INT4                 not null,
-   ID_EMPRESA_PA        INT4                 null,
-   ID_SASTIFACION       INT4                 not null,
-   TIPO_EMPRESA         VARCHAR(100)         not null,
+   ID_EMPRESA_PA        INT4                 not null,
+   TIPO_EMPRESA         VARCHAR(50)          not null,
    DIRECCION_EMPREC     VARCHAR(100)         not null,
    PROPIETARIO_EMPREC   VARCHAR(100)         not null,
-   NUMERO_TELEC         CHAR(10)             not null,
+   NUMERO_TELEC         VARCHAR(10)          not null,
    constraint PK_CONVENIOS primary key (ID_CONVENIOS)
+);
+
+/*==============================================================*/
+/* Index: CONVENIOS_PK                                          */
+/*==============================================================*/
+create unique index CONVENIOS_PK on CONVENIOS (
+ID_CONVENIOS
+);
+
+/*==============================================================*/
+/* Index: MANTIENE_FK                                           */
+/*==============================================================*/
+create  index MANTIENE_FK on CONVENIOS (
+ID_EMPRESA_PA
 );
 
 /*==============================================================*/
@@ -107,6 +147,20 @@ create table EMPRESA_PAQUETES (
    ID_EPOCAS            INT4                 not null,
    NOMBRE_E             VARCHAR(50)          not null,
    constraint PK_EMPRESA_PAQUETES primary key (ID_EMPRESA_PA)
+);
+
+/*==============================================================*/
+/* Index: EMPRESA_PAQUETES_PK                                   */
+/*==============================================================*/
+create unique index EMPRESA_PAQUETES_PK on EMPRESA_PAQUETES (
+ID_EMPRESA_PA
+);
+
+/*==============================================================*/
+/* Index: EXAMINA_FK                                            */
+/*==============================================================*/
+create  index EXAMINA_FK on EMPRESA_PAQUETES (
+ID_EPOCAS
 );
 
 /*==============================================================*/
@@ -121,16 +175,66 @@ create table EPOCAS_VENTA (
 );
 
 /*==============================================================*/
+/* Index: EPOCAS_VENTA_PK                                       */
+/*==============================================================*/
+create unique index EPOCAS_VENTA_PK on EPOCAS_VENTA (
+ID_EPOCAS
+);
+
+/*==============================================================*/
 /* Table: PAGO                                                  */
 /*==============================================================*/
 create table PAGO (
    ID_PAGO              INT4                 not null,
-   ID_CONTRATACION      INT4                 null,
    ID_TIPO_P            INT4                 not null,
-   ID_SERVICIOS         INT4                 not null,
+   ID_CONTRATACION      INT4                 not null,
    ID_SA                INT4                 not null,
+   ID_SERVICIOS         INT4                 not null,
+   ID_SASTIFACION       INT4                 not null,
    TOTAL_PAGO           MONEY                not null,
    constraint PK_PAGO primary key (ID_PAGO)
+);
+
+/*==============================================================*/
+/* Index: PAGO_PK                                               */
+/*==============================================================*/
+create unique index PAGO_PK on PAGO (
+ID_PAGO
+);
+
+/*==============================================================*/
+/* Index: HAY_FK                                                */
+/*==============================================================*/
+create  index HAY_FK on PAGO (
+ID_TIPO_P
+);
+
+/*==============================================================*/
+/* Index: SE_REALIZAN_FK                                        */
+/*==============================================================*/
+create  index SE_REALIZAN_FK on PAGO (
+ID_CONTRATACION
+);
+
+/*==============================================================*/
+/* Index: TIENE_FK                                              */
+/*==============================================================*/
+create  index TIENE_FK on PAGO (
+ID_SA
+);
+
+/*==============================================================*/
+/* Index: POSEE_FK                                              */
+/*==============================================================*/
+create  index POSEE_FK on PAGO (
+ID_SERVICIOS
+);
+
+/*==============================================================*/
+/* Index: DESCRIBEN_FK                                          */
+/*==============================================================*/
+create  index DESCRIBEN_FK on PAGO (
+ID_SASTIFACION
 );
 
 /*==============================================================*/
@@ -138,8 +242,15 @@ create table PAGO (
 /*==============================================================*/
 create table PAIS (
    ID_PAIS              INT4                 not null,
-   NOMBRE_PAIS          VARCHAR(50)          not null,
+   NOMBRE_PAIS          VARCHAR(100)         not null,
    constraint PK_PAIS primary key (ID_PAIS)
+);
+
+/*==============================================================*/
+/* Index: PAIS_PK                                               */
+/*==============================================================*/
+create unique index PAIS_PK on PAIS (
+ID_PAIS
 );
 
 /*==============================================================*/
@@ -148,10 +259,10 @@ create table PAIS (
 create table PAQUETE_TURISTICO (
    ID_PT                INT4                 not null,
    ID_EMPRESA_PA        INT4                 not null,
-   ID_CIUDAD            INT4                 null,
-   ID_AGENTE            INT4                 not null,
-   ID_CLIENTE           INT4                 not null,
    ID_CONVENIOS         INT4                 not null,
+   ID_CIUDAD            INT4                 not null,
+   ID_CLIENTE           INT4                 not null,
+   ID_AGENTE            INT4                 not null,
    TIPO_PT              VARCHAR(100)         not null,
    CANTIDAD_PT          INT4                 not null,
    PRECIO_PT            MONEY                not null,
@@ -160,13 +271,69 @@ create table PAQUETE_TURISTICO (
 );
 
 /*==============================================================*/
+/* Index: PAQUETE_TURISTICO_PK                                  */
+/*==============================================================*/
+create unique index PAQUETE_TURISTICO_PK on PAQUETE_TURISTICO (
+ID_PT
+);
+
+/*==============================================================*/
+/* Index: VENDE_FK                                              */
+/*==============================================================*/
+create  index VENDE_FK on PAQUETE_TURISTICO (
+ID_EMPRESA_PA
+);
+
+/*==============================================================*/
+/* Index: RECIBE_FK                                             */
+/*==============================================================*/
+create  index RECIBE_FK on PAQUETE_TURISTICO (
+ID_CONVENIOS
+);
+
+/*==============================================================*/
+/* Index: UBICAN_FK                                             */
+/*==============================================================*/
+create  index UBICAN_FK on PAQUETE_TURISTICO (
+ID_CIUDAD
+);
+
+/*==============================================================*/
+/* Index: COMPRA_FK                                             */
+/*==============================================================*/
+create  index COMPRA_FK on PAQUETE_TURISTICO (
+ID_CLIENTE
+);
+
+/*==============================================================*/
+/* Index: VENDEN_FK                                             */
+/*==============================================================*/
+create  index VENDEN_FK on PAQUETE_TURISTICO (
+ID_AGENTE
+);
+
+/*==============================================================*/
 /* Table: PROVINCIA                                             */
 /*==============================================================*/
 create table PROVINCIA (
    ID_PROVINCIA         INT4                 not null,
-   ID_PAIS              INT4                 null,
+   ID_PAIS              INT4                 not null,
    NOMBRE_PROVINCIA     VARCHAR(50)          not null,
    constraint PK_PROVINCIA primary key (ID_PROVINCIA)
+);
+
+/*==============================================================*/
+/* Index: PROVINCIA_PK                                          */
+/*==============================================================*/
+create unique index PROVINCIA_PK on PROVINCIA (
+ID_PROVINCIA
+);
+
+/*==============================================================*/
+/* Index: CONTIENE_FK                                           */
+/*==============================================================*/
+create  index CONTIENE_FK on PROVINCIA (
+ID_PAIS
 );
 
 /*==============================================================*/
@@ -184,6 +351,20 @@ create table SASTIFACCION (
 );
 
 /*==============================================================*/
+/* Index: SASTIFACCION_PK                                       */
+/*==============================================================*/
+create unique index SASTIFACCION_PK on SASTIFACCION (
+ID_SASTIFACION
+);
+
+/*==============================================================*/
+/* Index: REGISTRAN_FK                                          */
+/*==============================================================*/
+create  index REGISTRAN_FK on SASTIFACCION (
+ID_CLIENTE
+);
+
+/*==============================================================*/
 /* Table: SERVICIOS                                             */
 /*==============================================================*/
 create table SERVICIOS (
@@ -193,6 +374,20 @@ create table SERVICIOS (
    TRASLADO             MONEY                not null,
    EVENTOS              MONEY                not null,
    constraint PK_SERVICIOS primary key (ID_SERVICIOS)
+);
+
+/*==============================================================*/
+/* Index: SERVICIOS_PK                                          */
+/*==============================================================*/
+create unique index SERVICIOS_PK on SERVICIOS (
+ID_SERVICIOS
+);
+
+/*==============================================================*/
+/* Index: OFRECEN_FK                                            */
+/*==============================================================*/
+create  index OFRECEN_FK on SERVICIOS (
+ID_PT
 );
 
 /*==============================================================*/
@@ -207,13 +402,31 @@ create table SERVICIOS_ADICIONALES (
 );
 
 /*==============================================================*/
+/* Index: SERVICIOS_ADICIONALES_PK                              */
+/*==============================================================*/
+create unique index SERVICIOS_ADICIONALES_PK on SERVICIOS_ADICIONALES (
+ID_SA
+);
+
+/*==============================================================*/
 /* Table: TIPO_PAGO                                             */
 /*==============================================================*/
 create table TIPO_PAGO (
    ID_TIPO_P            INT4                 not null,
-   CREDITO_P            MONEY                not null,
-   DEBITO_P             MONEY                not null,
+   CANTIDAD_P_E         INT4                 not null,
+   EFECTIVO             MONEY                not null,
+   CANTIDAD_C           INT4                 not null,
+   CREDITO              MONEY                not null,
+   CANTIDAD_OP          INT4                 not null,
+   OTRA_FORMA_PAGO      MONEY                not null,
    constraint PK_TIPO_PAGO primary key (ID_TIPO_P)
+);
+
+/*==============================================================*/
+/* Index: TIPO_PAGO_PK                                          */
+/*==============================================================*/
+create unique index TIPO_PAGO_PK on TIPO_PAGO (
+ID_TIPO_P
 );
 
 alter table AGENTE
@@ -246,14 +459,19 @@ alter table CONVENIOS
       references EMPRESA_PAQUETES (ID_EMPRESA_PA)
       on delete restrict on update restrict;
 
-alter table CONVENIOS
-   add constraint FK_CONVENIO_REGISTRAN_SASTIFAC foreign key (ID_SASTIFACION)
-      references SASTIFACCION (ID_SASTIFACION)
-      on delete restrict on update restrict;
-
 alter table EMPRESA_PAQUETES
    add constraint FK_EMPRESA__EXAMINA_EPOCAS_V foreign key (ID_EPOCAS)
       references EPOCAS_VENTA (ID_EPOCAS)
+      on delete restrict on update restrict;
+
+alter table PAGO
+   add constraint FK_PAGO_DESCRIBEN_SASTIFAC foreign key (ID_SASTIFACION)
+      references SASTIFACCION (ID_SASTIFACION)
+      on delete restrict on update restrict;
+
+alter table PAGO
+   add constraint FK_PAGO_HAY_TIPO_PAG foreign key (ID_TIPO_P)
+      references TIPO_PAGO (ID_TIPO_P)
       on delete restrict on update restrict;
 
 alter table PAGO
@@ -271,29 +489,24 @@ alter table PAGO
       references SERVICIOS_ADICIONALES (ID_SA)
       on delete restrict on update restrict;
 
-alter table PAGO
-   add constraint FK_PAGO_TIPOPAGO__TIPO_PAG foreign key (ID_TIPO_P)
-      references TIPO_PAGO (ID_TIPO_P)
-      on delete restrict on update restrict;
-
 alter table PAQUETE_TURISTICO
    add constraint FK_PAQUETE__COMPRA_CLIENTE foreign key (ID_CLIENTE)
       references CLIENTE (ID_CLIENTE)
       on delete restrict on update restrict;
 
 alter table PAQUETE_TURISTICO
-   add constraint FK_PAQUETE__J_CIUDAD foreign key (ID_CIUDAD)
+   add constraint FK_PAQUETE__RECIBE_CONVENIO foreign key (ID_CONVENIOS)
+      references CONVENIOS (ID_CONVENIOS)
+      on delete restrict on update restrict;
+
+alter table PAQUETE_TURISTICO
+   add constraint FK_PAQUETE__UBICAN_CIUDAD foreign key (ID_CIUDAD)
       references CIUDAD (ID_CIUDAD)
       on delete restrict on update restrict;
 
 alter table PAQUETE_TURISTICO
-   add constraint FK_PAQUETE__OFRECE_EMPRESA_ foreign key (ID_EMPRESA_PA)
+   add constraint FK_PAQUETE__VENDE_EMPRESA_ foreign key (ID_EMPRESA_PA)
       references EMPRESA_PAQUETES (ID_EMPRESA_PA)
-      on delete restrict on update restrict;
-
-alter table PAQUETE_TURISTICO
-   add constraint FK_PAQUETE__RECIBE_CONVENIO foreign key (ID_CONVENIOS)
-      references CONVENIOS (ID_CONVENIOS)
       on delete restrict on update restrict;
 
 alter table PAQUETE_TURISTICO
@@ -315,4 +528,5 @@ alter table SERVICIOS
    add constraint FK_SERVICIO_OFRECEN_PAQUETE_ foreign key (ID_PT)
       references PAQUETE_TURISTICO (ID_PT)
       on delete restrict on update restrict;
+
 
