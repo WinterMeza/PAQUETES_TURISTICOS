@@ -1,4 +1,5 @@
-// Winter Meza
+// Winter Meza Jimenez
+// Ecuador
 const mongoose = require("mongoose");
 const conexion = "mongodb+srv://joancema:jacm1310@cluster0.x7met.mongodb.net/aaaprueba?retryWrites=true&w=majority";
 
